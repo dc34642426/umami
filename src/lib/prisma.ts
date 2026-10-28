@@ -65,12 +65,17 @@ export function getRawQueryClient(
 
 // Always Z-suffixed so JS parses the already-shifted local value as an unambiguous
 // instant instead of re-interpreting it in the runtime's own timezone.
+// No literal digits in the templates (no `HH24:00:00`, no `YYYY-MM-01`): every field is
+// wrapped in `date_trunc` first, so the lower-order parts are already 0/01 and real
+// patterns emit the exact same text. Some PostgreSQL derivatives (e.g. HighGo) read bare
+// digits as numeric format patterns and reject the template with
+// "date time format string ... is not recognized".
 const DATE_FORMATS = {
-  minute: 'YYYY-MM-DD"T"HH24:MI:00"Z"',
-  hour: 'YYYY-MM-DD"T"HH24:00:00"Z"',
-  day: 'YYYY-MM-DD"T"HH24:00:00"Z"',
-  month: 'YYYY-MM-01"T"HH24:00:00"Z"',
-  year: 'YYYY-01-01"T"HH24:00:00"Z"',
+  minute: 'YYYY-MM-DD"T"HH24:MI:SS"Z"',
+  hour: 'YYYY-MM-DD"T"HH24:MI:SS"Z"',
+  day: 'YYYY-MM-DD"T"HH24:MI:SS"Z"',
+  month: 'YYYY-MM-DD"T"HH24:MI:SS"Z"',
+  year: 'YYYY-MM-DD"T"HH24:MI:SS"Z"',
 };
 
 const DATE_STRING_FORMATS = {

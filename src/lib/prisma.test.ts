@@ -86,17 +86,17 @@ describe('getDateSQL timezone formatting', () => {
   test('formats UTC (default) buckets with an explicit zone and a Z marker', () => {
     // Never rely on the DB session's ambient timezone.
     expect(prisma.getDateSQL('website_event.created_at', 'hour')).toBe(
-      `to_char(date_trunc('hour', website_event.created_at at time zone 'UTC'), 'YYYY-MM-DD"T"HH24:00:00"Z"')`,
+      `to_char(date_trunc('hour', website_event.created_at at time zone 'UTC'), 'YYYY-MM-DD"T"HH24:MI:SS"Z"')`,
     );
     expect(prisma.getDateSQL('website_event.created_at', 'hour', 'UTC')).toBe(
-      `to_char(date_trunc('hour', website_event.created_at at time zone 'UTC'), 'YYYY-MM-DD"T"HH24:00:00"Z"')`,
+      `to_char(date_trunc('hour', website_event.created_at at time zone 'UTC'), 'YYYY-MM-DD"T"HH24:MI:SS"Z"')`,
     );
   });
 
   test('formats non-UTC buckets with the same explicit Z marker, not a bare timestamp', () => {
     // Bare timestamps get misparsed as local-to-the-runtime, not the source zone.
     expect(prisma.getDateSQL('website_event.created_at', 'hour', 'Asia/Tehran')).toBe(
-      `to_char(date_trunc('hour', website_event.created_at at time zone 'Asia/Tehran'), 'YYYY-MM-DD"T"HH24:00:00"Z"')`,
+      `to_char(date_trunc('hour', website_event.created_at at time zone 'Asia/Tehran'), 'YYYY-MM-DD"T"HH24:MI:SS"Z"')`,
     );
   });
 });

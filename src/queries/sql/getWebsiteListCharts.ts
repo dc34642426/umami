@@ -70,14 +70,14 @@ async function relationalQuery(
         to_char(
           date_trunc('day', website_event.created_at)
           + floor(extract(hour from website_event.created_at) / ${BUCKET_HOURS}) * interval '${BUCKET_HOURS} hour',
-          'YYYY-MM-DD HH24:00:00'
+          'YYYY-MM-DD HH24:MI:SS'
         )
       `
       : `
         to_char(
           date_trunc('day', website_event.created_at at time zone '${timezone}')
           + floor(extract(hour from website_event.created_at at time zone '${timezone}') / ${BUCKET_HOURS}) * interval '${BUCKET_HOURS} hour',
-          'YYYY-MM-DD HH24:00:00'
+          'YYYY-MM-DD HH24:MI:SS'
         )
       `;
 
